@@ -50,7 +50,7 @@ const server = http.createServer((req, res) => {
                     <li><a href = "/hello/ada%20lovelace">/hello/ada lovelace</a></li>
                     <li><a href = "/api/time">/api/time </a></li>
                     <li><a href = "/health">/health</a></li>
-                    <li><a href = "/api/favorite-books">/api/favorite-books</a></li>
+                    <li><a href = "/api/gym-routine">/api/gym-routine</a></li>
                 </ul>
             </body>
         </html>    
@@ -83,7 +83,7 @@ const server = http.createServer((req, res) => {
 
     // /api/time
     if(path === '/api/time'){
-        res.writeHead(200, {'content-type': 'application/json'});
+        res.writeHead(200, {'Content-type': 'application/json'});
         res.end(JSON.stringify({
             time: new Date().toISOString(),
             uptimeSeconds: Math.round(process.uptime()),
@@ -91,13 +91,14 @@ const server = http.createServer((req, res) => {
         return;
     }
 
-    // Custom route: /api/favorite-books (change the data to your favorites!)
-    if(path === '/api/favorite-books'){
-        res.writeHead(200, {'content-type': 'application/json'});
+    // Custom route: /api/gym-routine
+    if(path === '/api/gym-routine'){
+        res.writeHead(200, {'Content-type': 'application/json'});
         res.end(JSON.stringify({
             owner: 'Bibek Baidya',
-            count: 3,
-            books: ['Book One', 'Book Two', 'Book Three'],
+            perWeek: 4,
+            split: 'Push / Pull / Legs / Core',
+            exercises: ['Push-ups', 'Pull-ups', 'Leg press', 'Abs'],
         }));
         return;
     }
@@ -109,7 +110,7 @@ const server = http.createServer((req, res) => {
         return;
     }
 
-    res.writeHead(404, {'content-type': 'text/html; charset=utf-8 '});
+    res.writeHead(404, {'Content-type': 'text/html; charset=utf-8 '});
     res.end('<h1>404 - Not found</h1><p>Sorry, that page does not exist. <a href="/">Go home</a></p>'); 
 });
 
