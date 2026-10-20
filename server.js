@@ -98,7 +98,7 @@ const server = http.createServer((req, res) => {
             owner: 'Bibek Baidya',
             perWeek: 4,
             split: 'Push / Pull / Legs / Core',
-            exercises: ['Push-ups', 'Pull-ups', 'Leg press', 'Abs'],
+            exercises: ['Push-ups', 'Pull-ups', 'Leg press', 'Squats', 'Abs'],
         }));
         return;
     }
