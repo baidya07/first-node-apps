@@ -66,9 +66,17 @@ const server = http.createServer((req, res) => {
 
     //  /hello/<name>
     if(path.startsWith('/hello/')){
-        const name = decodeURIComponent(path.slice('/hello/'.length));
+        let name;
+        try{
+            name = decodeURIComponent(path.slice('/hello/'.length));
+        } catch (err){
+            res.writeHead(400, { 'Content-Type': 'text/html; charset=utf-8'});
+            res.end('Bad Request: malformed URL');
+            return;
+        }
+
         const safeName = escapeHtml(capitalizeWords(name));
-        res.writeHead(200, { 'content-Type': 'text/html; charset=utf-8'});
+        res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8'});
         res.end(`<h1>Hello ${safeName}!</h1>`);
         return;
     }
