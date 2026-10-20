@@ -1,6 +1,24 @@
+import { count, time } from 'node:console';
 import http from 'node:http';
 
 const port = process.argv[2] || process.env.port || 3000;
+
+//helper functions
+function escapeHtml(text){
+    return text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/</g, '&gt;')
+        .replace(/</g, '&quot;')
+        .replace(/</g, '&#39');
+}
+
+function capitalizeWords(text){
+    return text
+        .split(' ')
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+}
 
 const server = http.createServer((req, res) => {
     const start = Date.now();
@@ -32,6 +50,7 @@ const server = http.createServer((req, res) => {
                     <li><a href = "/hello/ada%20lovelace">/hello/ada lovelace</a></li>
                     <li><a href = "/api/time">/api/time </a></li>
                     <li><a href = "/health">/health</a></li>
+                    <li><a href = "/api/favorite-books">/api/favorite-books</a></li>
                 </ul>
             </body>
         </html>    
@@ -44,6 +63,37 @@ const server = http.createServer((req, res) => {
         res.end('OK');
         return;
     }
+
+    //  /hello/<name>
+    if(path.startsWith('/hello/')){
+        const name = decodeURIComponent(path.slice('/hello/'.length));
+        const safeName = escapeHtml(capitalizeWords(name));
+        res.writeHead(200, { 'content-Type': 'text/html; charset=utf-8'});
+        res.end(`<h1>Hello ${safeName}!</h1>`);
+        return;
+    }
+
+    // /api/time
+    if(path === '/api/time'){
+        res.writeHead(200, {'content-type': 'application/json'});
+        res.end(JSON.stringify({
+            time: new Date().toISOString(),
+            uptimeSeconds: Math.round(process.uptime()),
+        }));
+        return;
+    }
+
+    // Custom route: /api/favorite-books (change the data to your favorites!)
+    if(path === '/api/favorite-books'){
+        res.writeHead(200, {'content-type': 'application/json'});
+        res.end(JSON.stringify({
+            owner: 'Bibek Baidya',
+            count: 3,
+            books: ['Book One', 'Book Two', 'Book Three'],
+        }));
+        return;
+    }
+
 
     if(path === '/favicon.ico'){
         res.writeHead(404);
