@@ -98,4 +98,113 @@ Transfer-Encoding: chunked
 
 
 bibekbaidya@Mac-11364 first-node-apps % node server.js 5000
-Server running at http://localhost:5000/
+Server running at http://localhost:5000/echo 
+## Task 2 Test Log
+
+### curl -i output
+```
+$ curl -i http://localhost:3000/
+HTTP/1.1 200 OK
+Content-Type: text/html; charset=utf-8
+Date: Wed, 21 Oct 2026 03:38:04 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+Transfer-Encoding: chunked
+
+<!DOCTYPE html>
+            <html>
+            <head><title>First Node Apps</title></head>
+            <body>
+                <h1>Welcome</h1>
+                <ul>
+                    <li><a href = "/hello/ada%20lovelace">/hello/ada lovelace</a></li>
+                    <li><a href = "/api/time">/api/time </a></li>
+                    <li><a href = "/health">/health</a></li>
+                    <li><a href = "/api/gym-routine">/api/gym-routine</a></li>
+                </ul>
+            </body>
+        </html>    
+
+
+$ curl -i http://localhost:3000/hello/ada%20lovelace
+HTTP/1.1 200 OK
+Content-Type: text/html; charset=utf-8
+Date: Wed, 21 Oct 2026 03:54:17 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+Transfer-Encoding: chunked
+
+<h1>Hello Ada Lovelace!</h1>
+$ curl -i http://localhost:3000/api/time
+HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Wed, 21 Oct 2026 03:54:51 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+Transfer-Encoding: chunked
+
+{"time":"2026-10-21T03:54:51.976Z","uptimeSeconds":74}
+$ curl -i http://localhost:3000/health
+HTTP/1.1 200 OK
+Content-Type: text/plain; charset=utf-8
+Date: Wed, 21 Oct 2026 03:55:21 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+Transfer-Encoding: chunked
+
+OK
+$ curl -i http://localhost:3000/api/gym-routine
+HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Wed, 21 Oct 2026 03:55:48 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+Transfer-Encoding: chunked
+
+{"owner":"Bibek Baidya","perWeek":4,"split":"Push / Pull / Legs / Core","exercises":["Push-ups","Pull-ups","Leg press","Squats","Abs"]}
+$ curl -i http://localhost:3000/favicon.ico
+HTTP/1.1 404 Not Found
+Date: Wed, 21 Oct 2026 03:56:15 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+Transfer-Encoding: chunked
+
+
+$ curl -i http://localhost:3000/does-not-exist
+HTTP/1.1 404 Not Found
+Content-Type: text/html; charset=utf-8
+Date: Wed, 21 Oct 2026 04:09:58 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+Transfer-Encoding: chunked
+
+<h1>404 - Not found</h1><p>Sorry, that page does not exist. <a href="/">Go home</a></p>
+$ curl -i -X POST http://localhost:3000/
+HTTP/1.1 405 Method Not Allowed
+Content-Type: text/plain; charset=utf-8
+allow: GET
+Date: Wed, 21 Oct 2026 04:10:22 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+Transfer-Encoding: chunked
+
+Method not Allowed
+$ curl -i http://localhost:3000/hello/%E0%A4%A
+HTTP/1.1 400 Bad Request
+Content-Type: text/plain; charset=utf-8
+Date: Wed, 21 Oct 2026 04:10:45 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+Transfer-Encoding: chunked
+
+Bad Request: malformed URL
+$ curl -i "http://localhost:3000/hello/%3Cb%3Ebold%3C%2Fb%3E"
+HTTP/1.1 200 OK
+Content-Type: text/html; charset=utf-8
+Date: Wed, 21 Oct 2026 04:11:06 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+Transfer-Encoding: chunked
+
+<h1>Hello &lt;b&gt;bold&lt;/b&gt;!</h1>
+```
