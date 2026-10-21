@@ -77,3 +77,25 @@ Examples:
   node tipcalc.js 84.50 20 3
   node tipcalc.js 60
   TIP_PERCENT=25 node tipcalc.js 84.50
+
+
+  The nodemon lines:
+[nodemon] restarting due to changes...
+[nodemon] starting `node server.js`
+Server running at http://localhost:3000/
+
+
+The curl output showing "Squats" in the array.
+bibekbaidya@Mac-11364 first-node-apps % curl -i http://localhost:3000/api/gym-routine             
+HTTP/1.1 200 OK
+Content-type: application/json
+Date: Tue, 20 Oct 2026 20:35:39 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+Transfer-Encoding: chunked
+
+{"owner":"Bibek Baidya","perWeek":4,"split":"Push / Pull / Legs / Core","exercises":["Push-ups","Pull-ups","Leg press","Squats","Abs"]}%
+
+
+bibekbaidya@Mac-11364 first-node-apps % node server.js 5000
+Server running at http://localhost:5000/

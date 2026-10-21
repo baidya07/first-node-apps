@@ -1,7 +1,6 @@
-import { count, time } from 'node:console';
 import http from 'node:http';
 
-const port = process.argv[2] || process.env.port || 3000;
+const port = process.argv[2] || process.env.PORT || 3000;
 
 //helper functions
 function escapeHtml(text){
