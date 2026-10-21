@@ -85,20 +85,10 @@ Examples:
 Server running at http://localhost:3000/
 
 
-The curl output showing "Squats" in the array.
-bibekbaidya@Mac-11364 first-node-apps % curl -i http://localhost:3000/api/gym-routine             
-HTTP/1.1 200 OK
-Content-type: application/json
-Date: Tue, 20 Oct 2026 20:35:39 GMT
-Connection: keep-alive
-Keep-Alive: timeout=5
-Transfer-Encoding: chunked
-
-{"owner":"Bibek Baidya","perWeek":4,"split":"Push / Pull / Legs / Core","exercises":["Push-ups","Pull-ups","Leg press","Squats","Abs"]}%
 
 
-bibekbaidya@Mac-11364 first-node-apps % node server.js 5000
-Server running at http://localhost:5000/echo 
+
+
 ## Task 2 Test Log
 
 ### curl -i output
@@ -208,3 +198,132 @@ Transfer-Encoding: chunked
 
 <h1>Hello &lt;b&gt;bold&lt;/b&gt;!</h1>
 ```
+
+### Server request Log
+<!-- bibekbaidya@Mac-11482 first-node-apps % npm run dev
+
+> first-node-apps@1.0.0 dev
+> nodemon server.js
+
+[nodemon] 3.1.14
+[nodemon] to restart at any time, enter `rs`
+[nodemon] watching path(s): *.*
+[nodemon] watching extensions: js,mjs,cjs,json
+[nodemon] starting `node server.js`
+Server running at http://localhost:3000/
+GET / 200 2ms 
+GET / 200 0ms 
+[nodemon] restarting due to changes...
+[nodemon] starting `node server.js`
+Server running at http://localhost:3000/
+[nodemon] restarting due to changes...
+[nodemon] starting `node server.js`
+Server running at http://localhost:3000/
+GET / 200 2ms 
+GET / 200 1ms 
+[nodemon] restarting due to changes...
+[nodemon] starting `node server.js`
+Server running at http://localhost:3000/
+GET / 200 1ms 
+GET /health 200 0ms 
+GET /hello/%E0%A4%A 400 0ms 
+GET / 200 0ms 
+GET / 200 0ms 
+GET /hello/ada%20lovelace 200 0ms 
+GET /api/time 200 0ms 
+[nodemon] restarting due to changes...
+[nodemon] starting `node server.js`
+Server running at http://localhost:3000/
+[nodemon] restarting due to changes...
+[nodemon] starting `node server.js`
+Server running at http://localhost:3000/
+GET /api/time 200 2ms 
+GET /api/time 200 0ms 
+GET /api/time 200 0ms 
+GET /health 200 0ms 
+GET /api/gym-routine 200 1ms 
+GET /favicon.ico 404 0ms 
+rs
+[nodemon] starting `node server.js`
+Server running at http://localhost:3000/
+GET /hello/ada%20lovelace 200 1ms 
+GET /api/time 200 0ms 
+GET /health 200 0ms 
+GET /api/gym-routine 200 0ms 
+GET /favicon.ico 404 0ms 
+GET /does-not-exist 404 0ms 
+POST / 405 1ms 
+GET /hello/%E0%A4%A 400 0ms 
+GET /hello/%3Cb%3Ebold%3C%2Fb%3E 200 0ms 
+[nodemon] restarting due to changes...
+[nodemon] starting `node server.js`
+Server running at http://localhost:3000/
+POST / 405 2ms 
+GET /does-not-exist 404 0ms 
+GET /hello/%3Cb%3Ebold%3C%2Fb%3E 200 0ms 
+rs
+[nodemon] starting `node server.js`
+Server running at http://localhost:3000/
+GET /does-not-exist 404 1ms 
+POST / 405 0ms 
+GET /hello/%E0%A4%A 400 0ms 
+GET /hello/%3Cb%3Ebold%3C%2Fb%3E 200 0ms 
+ -->
+
+
+### Port settings
+
+Port from the first argument:
+
+```
+$ node server.js 5001
+Server running at http://localhost:5001/
+```
+
+Port from the environment variable:
+
+```
+$ PORT=8080 node server.js
+Server running at http://localhost:8080/
+```
+
+Note: macOS uses port 5000 for AirPlay Receiver, so I tested the argument with 5001.
+
+### Watch mode proof
+
+I added "Squats" to the `exercises` array in `/api/gym-routine` and saved. Nodemon restarted the server automatically:
+
+```
+[nodemon] restarting due to changes...
+[nodemon] starting `node server.js`
+Server running at http://localhost:3000/
+```
+
+Then curl showed the new data:
+
+```
+$ curl -i http://localhost:3000/api/gym-routine
+HTTP/1.1 200 OK
+Content-Type: application/json
+...
+{"owner":"Bibek Baidya","perWeek":4,"split":"Push / Pull / Legs / Core","exercises":["Push-ups","Pull-ups","Leg press","Squats","Abs"]}
+```
+
+## Custom route
+
+`GET /api/gym-routine` returns my gym routine as JSON (owner, perWeek, split, and an exercises array).
+
+
+## Reflection
+
+### 1. Why should an unknown URL return 404 instead of a 200 "not found" page?
+
+Status Code is a way for software to understand the results of a request. The status code is read by “browsers,” search engine crawlers, monitoring tools, load balancers, and API clients. If a page is not found and returns 200, Google can index junk pages, which will cause monitoring to assume that the site is healthy, and an Api client will attempt to process an error page as if it were real data. A correct 404 will inform each of them the truth.
+
+### 2. The /hello/%E0%A4%A crash
+
+The server encountered an internal error and was unable to handle the request due to a parsing error or URI malformed: `URIError: URI malformed`. The error was located in the route /hello/ in server.js line 69 as it was using a incomplete percent encoded sequence %E0%A4%A. The error was not caught and Node killed the whole process, and curl returned: Empty reply from server. I wrapped decodeURIComponent in a try/catch block which returns 400 Bad Request and returns, so that the server continues to run.
+
+### 3. What goes wrong with `let visits = 0` behind a load balancer?
+
+All copies of the server would store their own individual counter in their own memory. Requests would be passed to the different copies, each would count some of the visits and never the numbers would add up. It would also be set to 0 after every copy restarted. That is not the case, the count should be stored outside the servers, in a shared data store like a database or Redis, which makes the servers stateless.
