@@ -29,7 +29,7 @@ const server = http.createServer((req, res) => {
 
     if(req.method !== 'GET'){
         res.writeHead(405, {
-            'content-type': 'text/plain; charset=utf-8',
+            'Content-type': 'text/html; charset=utf-8',
             allow: 'GET',
         });
         res.end('Method not Allowed');
@@ -39,7 +39,7 @@ const server = http.createServer((req, res) => {
     const path = req.url.split('?')[0];
 
     if(path === '/'){
-        res.writeHead(200, {'content-Type': 'text/plain; charset=utf-8'} );
+        res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'} );
         res.end(`<!DOCTYPE html>
             <html>
             <head><title>First Node Apps</title></head>
@@ -69,7 +69,7 @@ const server = http.createServer((req, res) => {
         try{
             name = decodeURIComponent(path.slice('/hello/'.length));
         } catch (err){
-            res.writeHead(400, { 'Content-Type': 'text/html; charset=utf-8'});
+            res.writeHead(400, { 'Content-Type': 'text/plain; charset=utf-8'});
             res.end('Bad Request: malformed URL');
             return;
         }
@@ -109,7 +109,7 @@ const server = http.createServer((req, res) => {
         return;
     }
 
-    res.writeHead(404, {'Content-type': 'text/html; charset=utf-8 '});
+    res.writeHead(404, {'Content-type': 'text/html; charset=utf-8'});
     res.end('<h1>404 - Not found</h1><p>Sorry, that page does not exist. <a href="/">Go home</a></p>'); 
 });
 
