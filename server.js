@@ -7,9 +7,9 @@ function escapeHtml(text){
     return text
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
-        .replace(/</g, '&gt;')
-        .replace(/</g, '&quot;')
-        .replace(/</g, '&#39');
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39');
 }
 
 function capitalizeWords(text){
@@ -29,7 +29,7 @@ const server = http.createServer((req, res) => {
 
     if(req.method !== 'GET'){
         res.writeHead(405, {
-            'Content-type': 'text/html; charset=utf-8',
+            'Content-Type': 'text/plain; charset=utf-8',
             allow: 'GET',
         });
         res.end('Method not Allowed');
@@ -82,7 +82,7 @@ const server = http.createServer((req, res) => {
 
     // /api/time
     if(path === '/api/time'){
-        res.writeHead(200, {'Content-type': 'application/json'});
+        res.writeHead(200, {'Content-Type': 'application/json'});
         res.end(JSON.stringify({
             time: new Date().toISOString(),
             uptimeSeconds: Math.round(process.uptime()),
@@ -92,7 +92,7 @@ const server = http.createServer((req, res) => {
 
     // Custom route: /api/gym-routine
     if(path === '/api/gym-routine'){
-        res.writeHead(200, {'Content-type': 'application/json'});
+        res.writeHead(200, {'Content-Type': 'application/json'});
         res.end(JSON.stringify({
             owner: 'Bibek Baidya',
             perWeek: 4,
@@ -109,7 +109,7 @@ const server = http.createServer((req, res) => {
         return;
     }
 
-    res.writeHead(404, {'Content-type': 'text/html; charset=utf-8'});
+    res.writeHead(404, {'Content-Type': 'text/html; charset=utf-8'});
     res.end('<h1>404 - Not found</h1><p>Sorry, that page does not exist. <a href="/">Go home</a></p>'); 
 });
 
